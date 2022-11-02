@@ -22,7 +22,7 @@ public class CalculateAgeRiskUseCase {
                 .transform(c -> c.getYearsBirthDate(loanSupportProperties.years))
                 .onItem()
                 .transformToUni(value -> {
-                    if (value > MONTHS) {
+                    if (value > loanSupportProperties.age) {
                         return Uni.createFrom().failure(new RuntimeException("Age invalid do customer "));
                     }
 
