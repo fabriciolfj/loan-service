@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -25,7 +24,7 @@ public class CustomerRequest {
     private Integer score;
     @JsonProperty("birth_date")
     @NotEmpty(message = "${customer.birthDate}")
-    private LocalDate birthDate;
+    private String birthDate;
     @JsonProperty("salary")
     @NotNull(message = "${customer.salary}")
     private BigDecimal salary;

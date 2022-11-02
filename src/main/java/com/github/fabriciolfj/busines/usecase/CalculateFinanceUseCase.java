@@ -16,7 +16,7 @@ public class CalculateFinanceUseCase {
         return Uni.createFrom()
                 .item(contract)
                 .onItem()
-                .transform(c -> new Financial(c.getMonths(), c.getValueLoan(), LocalDate.now().plusDays(DAY)))
+                .transform(c -> new Financial(c.getMonths(), c.getInstallment(), c.getValueLoan(), LocalDate.now().plusDays(DAY)))
                 .onItem()
                 .transform(financial -> contract.setFinancial(financial));
     }

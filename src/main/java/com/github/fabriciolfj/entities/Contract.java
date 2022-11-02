@@ -3,6 +3,7 @@ package com.github.fabriciolfj.entities;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 
 @Builder
@@ -17,7 +18,11 @@ public class Contract {
     private Deadline deadline;
     private Customer customer;
 
-    public Integer getYearsBirthDate(Integer years) {
+    public Financial getFinancial() {
+        return financial;
+    }
+
+    public Integer getYearsBirthDate(final Integer years) {
         return LocalDate.now().plusYears(years).getYear() - customer.getYearsBirthDate();
     }
 
@@ -31,8 +36,16 @@ public class Contract {
         return this;
     }
 
+    public BigDecimal getInstallment() {
+        var result = getValueLoan().multiply(customer.getRate());
+        var total = getValueLoan().add(result);
+        return total.divide(BigDecimal.valueOf(getMonths()), 4, RoundingMode.HALF_DOWN);
+    }
+
     public BigDecimal getValueLoan() {
-        return customer.getSuggestedValue().multiply(BigDecimal.valueOf(getMonths()));
+        return customer.getSuggestedValue()
+                .multiply(BigDecimal.valueOf(getMonths()))
+                .setScale(4, RoundingMode.HALF_DOWN);
     }
 
     public Contract setFinancial(final Financial financial) {

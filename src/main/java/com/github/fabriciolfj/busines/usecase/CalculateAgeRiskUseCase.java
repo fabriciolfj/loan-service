@@ -6,15 +6,17 @@ import com.github.fabriciolfj.entities.Customer;
 import com.github.fabriciolfj.entities.Deadline;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
+import org.eclipse.microprofile.config.inject.ConfigProperties;
 
 import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-@RequiredArgsConstructor
 public class CalculateAgeRiskUseCase {
 
     private static final Integer MONTHS = 12;
-    private final LoanSupportProperties loanSupportProperties;
+
+    @ConfigProperties
+    private LoanSupportProperties loanSupportProperties;
 
     public Uni<Contract> execute(final Contract contract) {
         return Uni.createFrom().item(contract)
@@ -26,7 +28,7 @@ public class CalculateAgeRiskUseCase {
                         return Uni.createFrom().failure(new RuntimeException("Age invalid do customer "));
                     }
 
-                    var deadLine = new Deadline(value * MONTHS);
+                    var deadLine = new Deadline(loanSupportProperties.years * MONTHS);
                     return Uni.createFrom().item(contract.setDeadLine(deadLine));
                 });
     }
