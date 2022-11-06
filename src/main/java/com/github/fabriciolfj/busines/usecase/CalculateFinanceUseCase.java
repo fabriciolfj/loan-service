@@ -1,11 +1,9 @@
 package com.github.fabriciolfj.busines.usecase;
 
 import com.github.fabriciolfj.entities.Contract;
-import com.github.fabriciolfj.entities.Financial;
+import com.github.fabriciolfj.exceptions.LoanInvalidException;
 import io.smallrye.mutiny.Uni;
-
 import javax.enterprise.context.ApplicationScoped;
-import java.time.LocalDate;
 
 @ApplicationScoped
 public class CalculateFinanceUseCase {
@@ -16,8 +14,13 @@ public class CalculateFinanceUseCase {
         return Uni.createFrom()
                 .item(contract)
                 .onItem()
-                .transform(c -> new Financial(c.getMonths(), c.getInstallment(), c.getValueLoan(), LocalDate.now().plusDays(DAY)))
-                .onItem()
-                .transform(financial -> contract.setFinancial(financial));
+                .transform(c ->  {
+                    if (c.isValid()) {
+                        return c;
+                    }
+
+                    throw new LoanInvalidException();
+                }).onItem()
+                .transform(c -> c.createLoan());
     }
 }

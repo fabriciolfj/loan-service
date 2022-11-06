@@ -1,5 +1,6 @@
 package com.github.fabriciolfj.entrypoint.controller;
 
+import com.github.dockerjava.zerodep.shaded.org.apache.hc.core5.http.HttpStatus;
 import com.github.fabriciolfj.busines.usecase.LoanSuggestionUseCase;
 import com.github.fabriciolfj.entrypoint.converte.ContractDTOConverter;
 import com.github.fabriciolfj.entrypoint.converte.ErrorResponseConverter;
@@ -21,8 +22,9 @@ public class LoanController {
 
     private final LoanSuggestionUseCase loanSuggestionUseCase;
 
+
     @POST
-    public Uni<Response> createLoan(@Valid final CustomerRequest request) {
+    public Uni<Response> createSuggestion(@Valid final CustomerRequest request) {
         return Uni.createFrom().item(request)
                 .invoke(() -> log.info("Request received: {}", request))
                 .onItem()
@@ -30,12 +32,12 @@ public class LoanController {
                 .onItem()
                 .transformToUni(loanSuggestionUseCase::execute)
                 .onItem()
-                .transform(c -> FinancialDTOConverter.toResponse(c.getFinancial()))
+                .transform(c -> FinancialDTOConverter.toResponse(c.getLoan()))
                 .onItem()
                 .transform(c -> Response.status(Response.Status.CREATED).entity(c).build())
                 .onFailure()
                 .recoverWithItem(e -> Response
-                        .status(Response.Status.BAD_REQUEST)
+                        .status(HttpStatus.SC_UNPROCESSABLE_ENTITY)
                         .entity(ErrorResponseConverter.toResponse(e.getMessage()))
                         .build());
     }

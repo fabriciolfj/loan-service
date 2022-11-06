@@ -2,10 +2,8 @@ package com.github.fabriciolfj.busines.usecase;
 
 import com.github.fabriciolfj.configproperties.LoanSupportProperties;
 import com.github.fabriciolfj.entities.Contract;
-import com.github.fabriciolfj.entities.Customer;
 import com.github.fabriciolfj.entities.Deadline;
 import io.smallrye.mutiny.Uni;
-import lombok.RequiredArgsConstructor;
 import org.eclipse.microprofile.config.inject.ConfigProperties;
 
 import javax.enterprise.context.ApplicationScoped;

@@ -16,19 +16,25 @@ import java.math.BigDecimal;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CustomerRequest {
 
-    @JsonProperty("name")
-    @NotEmpty(message = "${customer.name}")
-    private String name;
+    @JsonProperty("portion")
+    @NotNull(message = "Parcela nao informada")
+    private Integer portion;
+    @JsonProperty("value")
+    @NotNull(message = "Valor do emprestimo nao informado")
+    private BigDecimal value;
+    @JsonProperty("document")
+    @NotEmpty(message = "Documento nao informado")
+    private String document;
     @JsonProperty("score")
-    @NotNull(message = "${customer.score}")
+    @NotNull(message = "Score nao informado")
     private Integer score;
     @JsonProperty("birth_date")
-    @NotEmpty(message = "${customer.birthDate}")
+    @NotEmpty(message = "Data nascimento nao informada")
     private String birthDate;
     @JsonProperty("salary")
-    @NotNull(message = "${customer.salary}")
+    @NotNull(message = "Salario nao informado")
     private BigDecimal salary;
     @JsonProperty("modality")
-    @NotEmpty(message = "${customer.modality}")
+    @NotEmpty(message = "Modalidade ausente")
     private String modality;
 }

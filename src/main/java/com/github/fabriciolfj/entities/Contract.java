@@ -17,6 +17,8 @@ public class Contract {
     private Financial financial;
     private Deadline deadline;
     private Customer customer;
+    private Loan loan;
+    private Risk risk;
 
     public Financial getFinancial() {
         return financial;
@@ -26,34 +28,23 @@ public class Contract {
         return LocalDate.now().plusYears(years).getYear() - customer.getYearsBirthDate();
     }
 
+    public Boolean isValid() {
+        return financial.isLoanValid();
+    }
+
     public Contract setDeadLine(final Deadline deadline) {
         this.deadline = deadline;
         return this;
     }
 
-    public Contract setCustomer(final Customer customer) {
+    public Contract init(final Customer customer, final Financial financial) {
         this.customer = customer;
-        return this;
-    }
-
-    public BigDecimal getInstallment() {
-        var result = getValueLoan().multiply(customer.getRate());
-        var total = getValueLoan().add(result);
-        return total.divide(BigDecimal.valueOf(getMonths()), 4, RoundingMode.HALF_DOWN);
-    }
-
-    public BigDecimal getValueLoan() {
-        return customer.getSuggestedValue()
-                .multiply(BigDecimal.valueOf(getMonths()))
-                .setScale(4, RoundingMode.HALF_DOWN);
-    }
-
-    public Contract setFinancial(final Financial financial) {
         this.financial = financial;
         return this;
     }
 
-    public Integer getMonths() {
-        return this.deadline.months();
+    public Contract createLoan() {
+        this.loan =  new Loan(financial.portion(), financial.calculateInstallment(), financial.loan(), deadline.getFirstSalary());
+        return this;
     }
 }

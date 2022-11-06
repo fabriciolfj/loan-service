@@ -15,13 +15,17 @@ public enum Modality {
     PRIVATE("private", BigDecimal.valueOf(0.27));
 
     private String describe;
-    private BigDecimal rate;
+    private BigDecimal fees;
 
     public static Modality toEnum(final String describe) {
         return Stream.of(Modality.values())
                 .filter(c -> c.describe.equals(describe))
                 .findAny()
                 .orElseThrow(() -> new RuntimeException("Modality not found: " + describe));
+    }
+
+    public BigDecimal calcFee(final BigDecimal value) {
+        return value.multiply(this.fees);
     }
 
 }
