@@ -13,7 +13,11 @@ public record Financial(Integer portion, BigDecimal loan, BigDecimal salary, Mod
         var value = calculateInstallment();
         var oneThird = calculateOneThird();
 
-        return oneThird.compareTo(value) <= LESS_OR_EQUAL;
+        return value.compareTo(oneThird) <= LESS_OR_EQUAL;
+    }
+
+    public BigDecimal getTotalLoan() {
+        return calculateInstallment().multiply(BigDecimal.valueOf(portion));
     }
 
     public BigDecimal calculateInstallment() {

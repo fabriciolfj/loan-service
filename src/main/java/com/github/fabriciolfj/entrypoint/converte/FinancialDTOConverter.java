@@ -7,12 +7,13 @@ public class FinancialDTOConverter {
 
     private FinancialDTOConverter() { }
 
-    public static FinancialResponse toResponse(final Loan loan) {
+    public static FinancialResponse toResponse(final Loan loan, final String code) {
         return FinancialResponse.builder()
                 .firstSalary(loan.firstSalary())
                 .installment(loan.installment())
                 .loan(loan.loan())
                 .portion(loan.portion())
+                .code(code)
                 .build();
     }
 }

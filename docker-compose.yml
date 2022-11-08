@@ -1,6 +1,6 @@
 version: "3.3"
 services:
-  postgres_account:
+  postgres_loan:
     image: debezium/example-postgres
     environment:
       POSTGRES_USER: root
@@ -8,7 +8,7 @@ services:
     ports:
       - "5432:5432"
 
-  postgres_prd:
+  postgres_commission:
     image: debezium/example-postgres
     environment:
       POSTGRES_USER: root
@@ -16,33 +16,19 @@ services:
     ports:
       - "5433:5432"
 
-  zookeeper:
-    image: zookeeper:3.6.1
-    container_name: zookeeper
-    restart: always
-    networks:
-      - kafka-net
-    ports:
-      - "2181:2181"
-
-  kafka:
-    image: wurstmeister/kafka:2.12-2.5.0
-    container_name: kafka
-    restart: always
-    networks:
-      - kafka-net
-    ports:
-      - "9092:9092"
+  kafka-cluster:
+    image: landoop/fast-data-dev:cp3.3.0
     environment:
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: DOCKER_INTERNAL:PLAINTEXT,DOCKER_EXTERNAL:PLAINTEXT
-      KAFKA_LISTENERS: DOCKER_INTERNAL://:29092,DOCKER_EXTERNAL://:9092
-      KAFKA_ADVERTISED_LISTENERS: DOCKER_INTERNAL://kafka:29092,DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9092
-      KAFKA_INTER_BROKER_LISTENER_NAME: DOCKER_INTERNAL
-      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
-      KAFKA_BROKER_ID: 1
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    depends_on:
-      - zookeeper
+      ADV_HOST: 127.0.0.1         # Change to 192.168.99.100 if using Docker Toolbox
+      RUNTESTS: 0                 # Disable Running tests so the cluster starts faster
+      FORWARDLOGS: 0              # Disable running 5 file source connectors that bring application logs into Kafka topics
+      SAMPLEDATA: 0               # Do not create sea_vessel_position_reports, nyc_yellow_taxi_trip_data, reddit_posts topics with sample Avro records.
+    ports:
+      - 2181:2181                 # Zookeeper
+      - 3030:3030                 # Landoop UI
+      - 8081-8083:8081-8083       # REST Proxy, Schema Registry, Kafka Connect ports
+      - 9581-9585:9581-9585       # JMX Ports
+      - 9092:9092
 
   redis:
     image: "redis:6"
@@ -52,5 +38,4 @@ services:
 
 networks:
   kafka-net:
-    name: kafka-net
     driver: bridge

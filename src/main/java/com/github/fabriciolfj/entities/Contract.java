@@ -5,6 +5,8 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Builder
 @Getter
@@ -14,6 +16,8 @@ import java.time.LocalDate;
 @ToString
 public class Contract {
 
+    private String code;
+    private LocalDateTime dateCreation;
     private Financial financial;
     private Deadline deadline;
     private Customer customer;
@@ -44,7 +48,37 @@ public class Contract {
     }
 
     public Contract createLoan() {
-        this.loan =  new Loan(financial.portion(), financial.calculateInstallment(), financial.loan(), deadline.getFirstSalary());
+        this.loan =  new Loan(financial.portion(), financial.calculateInstallment(), financial.loan(), deadline.getFirstSalary(), financial.getTotalLoan());
+        this.code = UUID.randomUUID().toString();
+        this.dateCreation = LocalDateTime.now();
         return this;
+    }
+
+    public BigDecimal getLoan() {
+        return this.loan.loan();
+    }
+
+    public String getDocument() {
+        return this.customer.document();
+    }
+
+    public LocalDate getBirthDate() {
+        return this.customer.birthDate();
+    }
+
+    public String getModality() {
+        return this.financial.modality().getDescribe();
+    }
+
+    public BigDecimal getSalary() {
+        return this.financial.salary();
+    }
+
+    public Integer getPortion() {
+        return this.financial.portion();
+    }
+
+    public Integer getScore() {
+        return this.customer.score();
     }
 }

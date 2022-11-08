@@ -6,11 +6,11 @@ import lombok.Getter;
 import javax.ws.rs.core.Response;
 
 @Getter
-public class LoanInvalidException extends RuntimeException {
+public class SaveContractException extends RuntimeException {
 
     private Integer status;
 
-    public LoanInvalidException() {
+    public SaveContractException() {
         super(Errors.ERROR_04.getMessage());
         this.status = Response.Status.BAD_REQUEST.getStatusCode();
     }

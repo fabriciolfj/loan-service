@@ -15,6 +15,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class FinancialResponse {
 
+    private String code;
     private Integer portion;
     private BigDecimal installment;
     private BigDecimal loan;

@@ -4,6 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 
-public record Loan(Integer portion, BigDecimal installment, BigDecimal loan, LocalDate firstSalary) {
+public record Loan(Integer portion, BigDecimal installment, BigDecimal loan, LocalDate firstSalary, BigDecimal totalLoan) {
 
 }
