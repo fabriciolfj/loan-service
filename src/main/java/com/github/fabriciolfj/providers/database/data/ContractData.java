@@ -1,12 +1,7 @@
 package com.github.fabriciolfj.providers.database.data;
 
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,19 +16,34 @@ import java.time.LocalDateTime;
 public class ContractData {
 
     @Id
+    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String code;
     private BigDecimal loan;
     private Integer portion;
-    private String document;
-    @Column(name = "birth_date")
-    private LocalDate birthDate;
     @Column(name = "date_creation")
     private LocalDateTime dateCreation;
-    private BigDecimal salary;
     private String modality;
-    private Integer score;
     private BigDecimal rate;
     private BigDecimal fees;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "customer_id")
+    private CustomerData customer;
+
+    public Integer getScore() {
+        return this.customer.getScore();
+    }
+
+    public String getDocument() {
+        return this.customer.getDocument();
+    }
+
+    public BigDecimal getSalary() {
+        return this.customer.getSalary();
+    }
+
+    public LocalDate getBirthDate() {
+        return this.customer.getBirthDate();
+    }
 }

@@ -26,7 +26,7 @@ public class CalculateAgeRiskUseCase {
                         return Uni.createFrom().failure(new RuntimeException("Age invalid do customer "));
                     }
 
-                    var deadLine = new Deadline(loanSupportProperties.years * MONTHS);
+                    var deadLine = new Deadline();
                     return Uni.createFrom().item(contract.setDeadLine(deadLine));
                 });
     }

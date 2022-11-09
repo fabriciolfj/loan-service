@@ -3,7 +3,6 @@ package com.github.fabriciolfj.entities;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -52,6 +51,10 @@ public class Contract {
         this.code = UUID.randomUUID().toString();
         this.dateCreation = LocalDateTime.now();
         return this;
+    }
+
+    public BigDecimal getInstallment() {
+        return this.loan.installment();
     }
 
     public BigDecimal getLoan() {
