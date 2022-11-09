@@ -10,7 +10,7 @@ public class ContractCommissionDTOConverter {
     public static ContractCommissionDTO toDTO(final Contract contract) {
         return ContractCommissionDTO.builder()
                 .installment(contract.getInstallment())
-                .loan(contract.getLoan())
+                .loan(contract.getLoanValue())
                 .portion(contract.getPortion())
                 .build();
     }
