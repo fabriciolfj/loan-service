@@ -16,6 +16,7 @@ create table contract(
   date_creation timestamp       not null,
   rate          numeric(15,4)   not null,
   fees          numeric(15, 4)  not null,
+  status        varchar(20)     not null,
   customer_id   int8            not null,
   primary key (id),
   constraint fk_customer_constract foreign key (customer_id) references customer(id)

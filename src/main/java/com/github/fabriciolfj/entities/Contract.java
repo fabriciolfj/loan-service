@@ -16,6 +16,7 @@ import java.util.UUID;
 public class Contract {
 
     private String code;
+    private StatusContract status;
     private LocalDateTime dateCreation;
     private Financial financial;
     private Deadline deadline;
@@ -27,8 +28,8 @@ public class Contract {
         return financial;
     }
 
-    public Integer getYearsBirthDate(final Integer years) {
-        return LocalDate.now().plusYears(years).getYear() - customer.getYearsBirthDate();
+    public Integer getYearsBirthDate() {
+        return LocalDate.now().getYear() - customer.getYearsBirthDate();
     }
 
     public Boolean isValid() {
@@ -43,6 +44,7 @@ public class Contract {
     public Contract init(final Customer customer, final Financial financial) {
         this.customer = customer;
         this.financial = financial;
+        this.status = StatusContract.PENDING;
         return this;
     }
 
@@ -57,7 +59,7 @@ public class Contract {
         return this.loan.installment();
     }
 
-    public BigDecimal getLoan() {
+    public BigDecimal getLoanValue() {
         return this.loan.loan();
     }
 

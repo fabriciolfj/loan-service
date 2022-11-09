@@ -20,8 +20,9 @@ public class ContractDataConverter {
                 .build();
 
         var contractData= ContractData.builder()
-                .loan(contract.getLoan())
+                .loan(contract.getLoanValue())
                 .code(contract.getCode())
+                .status(contract.getStatus().getDescribe())
                 .modality(contract.getModality())
                 .dateCreation(contract.getDateCreation())
                 .portion(contract.getPortion())
@@ -41,6 +42,7 @@ public class ContractDataConverter {
 
         return Contract.builder()
                 .code(data.getCode())
+                .status(StatusContract.valueOf(data.getStatus()))
                 .dateCreation(data.getDateCreation())
                 .customer(customer)
                 .financial(financial)

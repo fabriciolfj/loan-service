@@ -6,5 +6,4 @@ import org.eclipse.microprofile.config.inject.ConfigProperties;
 public class LoanSupportProperties {
 
     public Integer age;
-    public Integer years;
 }

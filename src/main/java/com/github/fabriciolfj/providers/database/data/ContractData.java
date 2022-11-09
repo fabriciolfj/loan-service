@@ -24,9 +24,12 @@ public class ContractData {
     private Integer portion;
     @Column(name = "date_creation")
     private LocalDateTime dateCreation;
+    @Column(name = "due_date")
+    private LocalDate dueDate;
     private String modality;
     private BigDecimal rate;
     private BigDecimal fees;
+    private String status;
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "customer_id")
     private CustomerData customer;

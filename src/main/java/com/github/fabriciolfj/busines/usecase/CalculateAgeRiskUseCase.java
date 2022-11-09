@@ -19,7 +19,7 @@ public class CalculateAgeRiskUseCase {
     public Uni<Contract> execute(final Contract contract) {
         return Uni.createFrom().item(contract)
                 .onItem()
-                .transform(c -> c.getYearsBirthDate(loanSupportProperties.years))
+                .transform(c -> c.getYearsBirthDate())
                 .onItem()
                 .transformToUni(value -> {
                     if (value > loanSupportProperties.age) {

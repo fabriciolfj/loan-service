@@ -4,7 +4,6 @@ import com.github.fabriciolfj.busines.ProviderFindContract;
 import com.github.fabriciolfj.busines.ProviderSaveContract;
 import com.github.fabriciolfj.entities.Contract;
 import com.github.fabriciolfj.exceptions.ContractNotFoundException;
-import com.github.fabriciolfj.exceptions.SaveContractException;
 import com.github.fabriciolfj.providers.database.converter.ContractDataConverter;
 import com.github.fabriciolfj.providers.database.data.ContractData;
 import io.quarkus.hibernate.reactive.panache.Panache;
@@ -33,14 +32,14 @@ public class ContractRepository implements PanacheRepository<ContractData>, Prov
     }
 
     @Override
-    public Uni<Contract> process(Uni<Contract> contract) {
-        return contract.onItem()
+    public Uni<Contract> process(Contract contract) {
+        return Uni.createFrom().item(contract).onItem()
                 .transform(ContractDataConverter::toData)
                 .onItem()
                 .transformToUni(c -> Panache.withTransaction(() -> persist(c)))
                 .invoke(c -> log.info("Contract saved: {}", c))
                 .onItem()
-                .transformToUni(result -> contract)
+                .transform(result -> contract)
                 .onFailure()
                 .invoke(e -> log.error("Fail saved contract. Details {}", e.getMessage()));
     }

@@ -5,5 +5,5 @@ import io.smallrye.mutiny.Uni;
 
 public interface ProviderSaveContract {
 
-    Uni<Contract> process(Uni<Contract> contract);
+    Uni<Contract> process(Contract contract);
 }
