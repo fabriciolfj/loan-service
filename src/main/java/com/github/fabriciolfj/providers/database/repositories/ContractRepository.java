@@ -7,7 +7,6 @@ import com.github.fabriciolfj.exceptions.ContractNotFoundException;
 import com.github.fabriciolfj.providers.database.converter.ContractDataConverter;
 import com.github.fabriciolfj.providers.database.data.ContractData;
 import io.quarkus.hibernate.reactive.panache.Panache;
-import io.quarkus.hibernate.reactive.panache.PanacheRepository;
 import io.smallrye.mutiny.Uni;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,12 +15,12 @@ import java.time.Duration;
 
 @ApplicationScoped
 @Slf4j
-public class ContractRepository implements PanacheRepository<ContractData>, ProviderFindContract, ProviderSaveContract {
+public class ContractRepository implements ProviderFindContract, ProviderSaveContract {
 
     @Override
     public Uni<Contract> findByContract(final Uni<String> code) {
         return code.onItem()
-                .transformToUni(c -> find("code", code).firstResult())
+                .transformToUni(c -> ContractData.find("code", code).firstResult())
                 .onItem()
                 .transform(c -> (ContractData) c)
                 .onItem()
@@ -32,11 +31,11 @@ public class ContractRepository implements PanacheRepository<ContractData>, Prov
     }
 
     @Override
-    public Uni<Contract> process(Contract contract) {
+    public Uni<Contract> process(final Contract contract) {
         return Uni.createFrom().item(contract).onItem()
                 .transform(ContractDataConverter::toData)
                 .onItem()
-                .transformToUni(c -> Panache.withTransaction(() -> persist(c)))
+                .transformToUni(c -> Panache.withTransaction(() -> c.persist()))
                 .invoke(c -> log.info("Contract saved: {}", c))
                 .onItem()
                 .transform(result -> contract)

@@ -13,6 +13,10 @@ public class Deadline {
 
     private LocalDate firstSalary;
 
+    public Deadline(final LocalDate localDate) {
+        this.firstSalary = localDate;
+    }
+
     public Deadline() {
         this.firstSalary = LocalDate.now().plusDays(DAYS_30);
     }

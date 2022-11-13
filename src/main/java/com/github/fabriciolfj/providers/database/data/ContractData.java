@@ -1,11 +1,13 @@
 package com.github.fabriciolfj.providers.database.data;
 
+import io.quarkus.hibernate.reactive.panache.PanacheEntity;
 import lombok.*;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@Table(name = "contract")
 @Builder
 @Getter
 @Setter
@@ -13,19 +15,18 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class ContractData {
+@Entity
+public class ContractData extends PanacheEntity {
 
-    @Id
-    @EqualsAndHashCode.Include
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     private String code;
     private BigDecimal loan;
     private Integer portion;
     @Column(name = "date_creation")
     private LocalDateTime dateCreation;
+    @Column(name = "date_expiration")
+    private String dateExpiration;
     @Column(name = "due_date")
-    private LocalDate dueDate;
+    private String dueDate;
     private String modality;
     private BigDecimal rate;
     private BigDecimal fees;
@@ -47,6 +48,6 @@ public class ContractData {
     }
 
     public LocalDate getBirthDate() {
-        return this.customer.getBirthDate();
+        return LocalDate.parse(this.customer.getBirthDate());
     }
 }

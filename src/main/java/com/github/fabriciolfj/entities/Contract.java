@@ -17,6 +17,7 @@ public class Contract {
 
     private String code;
     private StatusContract status;
+    private LocalDate expirationDate;
     private LocalDateTime dateCreation;
     private Financial financial;
     private Deadline deadline;
@@ -45,6 +46,7 @@ public class Contract {
         this.customer = customer;
         this.financial = financial;
         this.status = StatusContract.PENDING;
+        this.expirationDate = LocalDate.now();
         return this;
     }
 
@@ -85,5 +87,9 @@ public class Contract {
 
     public Integer getScore() {
         return this.customer.score();
+    }
+
+    public LocalDate getDueDate() {
+        return this.deadline.getFirstSalary();
     }
 }

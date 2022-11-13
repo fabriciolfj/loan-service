@@ -1,12 +1,13 @@
 package com.github.fabriciolfj.providers.database.data;
 
+import io.quarkus.hibernate.reactive.panache.PanacheEntity;
 import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 
+@Entity
 @Builder
 @Getter
 @Setter
@@ -14,15 +15,12 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class CustomerData {
+@Table(name = "customer")
+public class CustomerData extends PanacheEntity {
 
-    @Id
-    @EqualsAndHashCode.Include
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     private String document;
     @Column(name = "birth_date")
-    private LocalDate birthDate;
+    private String birthDate;
     private BigDecimal salary;
     private Integer score;
     @OneToMany(orphanRemoval = true, mappedBy = "customer")

@@ -9,6 +9,7 @@ import io.smallrye.mutiny.Uni;
 import io.smallrye.reactive.messaging.MutinyEmitter;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.microprofile.reactive.messaging.Channel;
+import org.eclipse.microprofile.reactive.messaging.OnOverflow;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -17,7 +18,9 @@ import javax.inject.Inject;
 @ApplicationScoped
 public class ProducerEventCommission {
 
+    @Inject
     @Channel("commission-service")
+    @OnOverflow(value = OnOverflow.Strategy.BUFFER)
     private MutinyEmitter<String> producer;
 
     @Inject

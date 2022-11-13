@@ -5,7 +5,7 @@ import com.github.fabriciolfj.providers.database.data.ContractData;
 import com.github.fabriciolfj.providers.database.data.CustomerData;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.time.LocalDate;
 
 public class ContractDataConverter {
 
@@ -14,7 +14,7 @@ public class ContractDataConverter {
     public static ContractData toData(final Contract contract) {
         var customer = CustomerData.builder()
                 .salary(contract.getSalary())
-                .birthDate(contract.getBirthDate())
+                .birthDate(contract.getBirthDate().toString())
                 .document(contract.getDocument())
                 .score(contract.getScore())
                 .build();
@@ -28,15 +28,17 @@ public class ContractDataConverter {
                 .portion(contract.getPortion())
                 .fees(BigDecimal.ZERO)
                 .rate(BigDecimal.ZERO)
+                .dateExpiration(contract.getExpirationDate().toString())
+                .dueDate(contract.getDueDate().toString())
                 .customer(customer)
                 .build();
 
-        customer.setContracts(List.of(contractData));
         return contractData;
     }
 
     public static Contract toEntity(final ContractData data) {
         var financial = new Financial(data.getPortion(), data.getLoan(), data.getSalary(), Modality.toEnum(data.getModality()));
+        var deadLine = new Deadline(LocalDate.parse(data.getDueDate()));
         var customer = new Customer(data.getDocument(), data.getScore(), data.getBirthDate());
         var risk = new Risk(BigDecimal.ZERO, BigDecimal.ZERO);
 
@@ -46,7 +48,9 @@ public class ContractDataConverter {
                 .dateCreation(data.getDateCreation())
                 .customer(customer)
                 .financial(financial)
+                .expirationDate(LocalDate.parse(data.getDateExpiration()))
                 .risk(risk)
+                .deadline(deadLine)
                 .build();
     }
 }
