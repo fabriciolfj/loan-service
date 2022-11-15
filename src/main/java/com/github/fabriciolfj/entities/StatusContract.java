@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 @Getter
 @AllArgsConstructor
 public enum StatusContract {
-    APPROVED("approved"), DISAPPROVED("disapproved"), PENDING("pending");
+    APPROVED("approved"), PENDING("pending");
 
     private final String describe;
 

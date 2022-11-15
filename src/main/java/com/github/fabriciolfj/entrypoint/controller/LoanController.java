@@ -1,5 +1,6 @@
 package com.github.fabriciolfj.entrypoint.controller;
 
+import com.github.fabriciolfj.busines.usecase.ApproveContractUseCase;
 import com.github.fabriciolfj.busines.usecase.ListAllContractsUseCase;
 import com.github.fabriciolfj.busines.usecase.LoanSuggestionUseCase;
 import com.github.fabriciolfj.busines.usecase.QueryContractUseCase;
@@ -8,7 +9,6 @@ import com.github.fabriciolfj.entrypoint.converte.ErrorResponseConverter;
 import com.github.fabriciolfj.entrypoint.converte.FinancialDTOConverter;
 import com.github.fabriciolfj.entrypoint.dto.request.CustomerRequest;
 import com.github.fabriciolfj.entrypoint.dto.response.FinancialResponse;
-import com.github.fabriciolfj.exceptions.ContractNotFoundException;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +27,7 @@ public class LoanController {
     private final LoanSuggestionUseCase loanSuggestionUseCase;
     private final QueryContractUseCase queryContractUseCase;
     private final ListAllContractsUseCase listAllContractsUseCase;
+    private final ApproveContractUseCase approveContractUseCase;
 
     @GET
     public Multi<FinancialResponse> findAll(@QueryParam("page_init") final int pageInit) {
@@ -37,6 +38,18 @@ public class LoanController {
                 .recoverWithMulti(() -> Multi.createFrom().empty())
                 .onFailure()
                 .recoverWithMulti(() -> Multi.createFrom().empty());
+    }
+
+    @PUT
+    @Path("/{code}/approve")
+    public Uni<Response> approveContract(@PathParam("code") final String code) {
+        return approveContractUseCase.execute(code)
+                .onItem()
+                .transform(c -> Response.noContent().build())
+                .onFailure()
+                .recoverWithItem(e -> Response.status(Response.Status.BAD_REQUEST)
+                        .entity(ErrorResponseConverter.toResponse(e.getMessage()))
+                        .build());
     }
 
     @GET

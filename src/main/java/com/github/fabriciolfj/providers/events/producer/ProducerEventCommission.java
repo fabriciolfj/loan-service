@@ -1,7 +1,7 @@
 package com.github.fabriciolfj.providers.events.producer;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fabriciolfj.busines.ProviderEventContract;
 import com.github.fabriciolfj.entities.Contract;
 import com.github.fabriciolfj.providers.events.converter.ContractCommissionDTOConverter;
 import com.github.fabriciolfj.providers.events.dto.ContractCommissionDTO;
@@ -16,7 +16,7 @@ import javax.inject.Inject;
 
 @Slf4j
 @ApplicationScoped
-public class ProducerEventCommission {
+public class ProducerEventCommission implements ProviderEventContract {
 
     @Inject
     @Channel("commission-service")
@@ -26,8 +26,9 @@ public class ProducerEventCommission {
     @Inject
     private ObjectMapper mapper;
 
-    public Uni<Void> process(final Uni<Contract> contract) {
-        return contract
+    @Override
+    public Uni<Void> process(final Contract contract) {
+        return Uni.createFrom().item(contract)
                 .onItem()
                 .transform(ContractCommissionDTOConverter::toDTO)
                 .onItem()

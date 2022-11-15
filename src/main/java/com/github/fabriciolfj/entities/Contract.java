@@ -57,6 +57,11 @@ public class Contract {
         return this;
     }
 
+    public Contract approve() {
+        this.status = StatusContract.APPROVED;
+        return this;
+    }
+
     public BigDecimal getInstallment() {
         return this.loan.installment();
     }
