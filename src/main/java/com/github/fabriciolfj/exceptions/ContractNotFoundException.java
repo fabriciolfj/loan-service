@@ -11,7 +11,7 @@ public class ContractNotFoundException extends RuntimeException {
     private Integer status;
 
     public ContractNotFoundException() {
-        super(Errors.ERROR_04.getMessage());
+        super(Errors.ERROR_05.getMessage());
         this.status = Response.Status.BAD_REQUEST.getStatusCode();
     }
 }

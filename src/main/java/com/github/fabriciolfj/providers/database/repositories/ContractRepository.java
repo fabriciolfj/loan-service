@@ -8,12 +8,10 @@ import com.github.fabriciolfj.exceptions.ContractNotFoundException;
 import com.github.fabriciolfj.providers.database.converter.ContractDataConverter;
 import com.github.fabriciolfj.providers.database.data.ContractData;
 import io.quarkus.hibernate.reactive.panache.Panache;
-import io.quarkus.panache.common.Page;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.extern.slf4j.Slf4j;
 import javax.enterprise.context.ApplicationScoped;
-import java.time.Duration;
 
 @ApplicationScoped
 @Slf4j
@@ -23,15 +21,21 @@ public class ContractRepository implements ProviderFindContract, ProviderSaveCon
 
     @Override
     public Uni<Contract> process(final String code) {
-        return Uni.createFrom().item(code).onItem()
-                .transformToUni(c -> ContractData.find("code", code).firstResult())
+        return Uni.createFrom().item(code)
                 .onItem()
-                .transform(c -> (ContractData) c)
+                .transform(c -> ContractData.find("code", code))
                 .onItem()
-                .transform(ContractDataConverter::toEntity)
-                .ifNoItem()
-                .after(Duration.ofSeconds(1))
-                .failWith(new ContractNotFoundException());
+                .transformToUni(c -> c.firstResult())
+                .onItem()
+                .transform(c -> {
+                    if (c == null) {
+                        throw new ContractNotFoundException();
+                    }
+
+                    return (ContractData) c;
+                })
+                .onItem()
+                .transform(ContractDataConverter::toEntity);
     }
 
     @Override
