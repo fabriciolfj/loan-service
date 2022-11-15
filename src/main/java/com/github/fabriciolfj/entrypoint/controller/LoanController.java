@@ -4,12 +4,11 @@ import com.github.fabriciolfj.busines.usecase.ListAllContractsUseCase;
 import com.github.fabriciolfj.busines.usecase.LoanSuggestionUseCase;
 import com.github.fabriciolfj.busines.usecase.QueryContractUseCase;
 import com.github.fabriciolfj.entrypoint.converte.ContractDTOConverter;
-import com.github.fabriciolfj.entrypoint.converte.DataResponseConverter;
 import com.github.fabriciolfj.entrypoint.converte.ErrorResponseConverter;
 import com.github.fabriciolfj.entrypoint.converte.FinancialDTOConverter;
 import com.github.fabriciolfj.entrypoint.dto.request.CustomerRequest;
-import com.github.fabriciolfj.entrypoint.dto.response.DataResponse;
 import com.github.fabriciolfj.entrypoint.dto.response.FinancialResponse;
+import com.github.fabriciolfj.exceptions.ContractNotFoundException;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.time.Duration;
 
 @Slf4j
 @Path("/api/v1/loan")
@@ -29,11 +29,14 @@ public class LoanController {
     private final ListAllContractsUseCase listAllContractsUseCase;
 
     @GET
-    public Multi<DataResponse<FinancialResponse>> findAll(@QueryParam("page_init") final int pageInit) {
+    public Multi<FinancialResponse> findAll(@QueryParam("page_init") final int pageInit) {
         return listAllContractsUseCase.execute(pageInit)
-                .map(r -> DataResponseConverter.toDto(r, null))
+                .map(r -> FinancialDTOConverter.toResponse(r))
+                .ifNoItem()
+                .after(Duration.ofSeconds(5))
+                .recoverWithMulti(() -> Multi.createFrom().empty())
                 .onFailure()
-                .recoverWithMulti(r -> Multi.createFrom().item(DataResponseConverter.toDto(null, r.getMessage())));
+                .recoverWithMulti(() -> Multi.createFrom().empty());
     }
 
     @GET
