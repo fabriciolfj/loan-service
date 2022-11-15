@@ -34,6 +34,10 @@ public class ContractData extends PanacheEntity {
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "customer_id")
     private CustomerData customer;
+    @Column(name = "installment_value", nullable = false, precision = 4)
+    private BigDecimal installmentValue;
+    @Column(name = "total_loan", nullable = false, precision = 4)
+    private BigDecimal totalLoan;
 
     public Integer getScore() {
         return this.customer.getScore();

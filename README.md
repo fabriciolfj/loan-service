@@ -22,3 +22,6 @@
  - minikube/k8s
  - istio
  - argocd
+
+# links para consulta:
+- https://quarkus.io/guides/hibernate-reactive-panache#paging

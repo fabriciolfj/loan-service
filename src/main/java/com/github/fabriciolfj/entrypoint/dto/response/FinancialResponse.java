@@ -21,4 +21,5 @@ public class FinancialResponse {
     private BigDecimal loan;
     @JsonProperty("first_salary")
     private LocalDate firstSalary;
+    private String status;
 }

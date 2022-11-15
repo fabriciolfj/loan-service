@@ -1,19 +1,22 @@
 package com.github.fabriciolfj.entrypoint.converte;
 
-import com.github.fabriciolfj.entities.Loan;
+import com.github.fabriciolfj.entities.Contract;
 import com.github.fabriciolfj.entrypoint.dto.response.FinancialResponse;
 
 public class FinancialDTOConverter {
 
     private FinancialDTOConverter() { }
 
-    public static FinancialResponse toResponse(final Loan loan, final String code) {
+    public static FinancialResponse toResponse(final Contract contract) {
+        var loan = contract.getLoan();
+        var deadLine = contract.getDeadline();
         return FinancialResponse.builder()
-                .firstSalary(loan.firstSalary())
+                .firstSalary(deadLine.getFirstSalary())
                 .installment(loan.installment())
                 .loan(loan.loan())
                 .portion(loan.portion())
-                .code(code)
+                .code(contract.getCode())
+                .status(contract.getStatus().getDescribe())
                 .build();
     }
 }

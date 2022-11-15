@@ -5,5 +5,5 @@ import io.smallrye.mutiny.Uni;
 
 public interface ProviderFindContract {
 
-    Uni<Contract> findByContract(final Uni<String> code);
+    Uni<Contract> process(final String code);
 }

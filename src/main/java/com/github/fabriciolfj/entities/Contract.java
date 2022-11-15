@@ -51,7 +51,7 @@ public class Contract {
     }
 
     public Contract createLoan() {
-        this.loan =  new Loan(financial.portion(), financial.calculateInstallment(), financial.loan(), deadline.getFirstSalary(), financial.getTotalLoan());
+        this.loan =  new Loan(financial.portion(), financial.calculateInstallment(), financial.loan(), financial.getTotalLoan());
         this.code = UUID.randomUUID().toString();
         this.dateCreation = LocalDateTime.now();
         return this;

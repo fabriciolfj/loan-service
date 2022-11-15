@@ -12,6 +12,7 @@ public class ContractDataConverter {
     private ContractDataConverter() { }
 
     public static ContractData toData(final Contract contract) {
+        var loan = contract.getLoan();
         var customer = CustomerData.builder()
                 .salary(contract.getSalary())
                 .birthDate(contract.getBirthDate().toString())
@@ -20,12 +21,14 @@ public class ContractDataConverter {
                 .build();
 
         var contractData= ContractData.builder()
-                .loan(contract.getLoanValue())
+                .loan(loan.loan())
+                .installmentValue(loan.installment())
+                .totalLoan(loan.totalLoan())
+                .portion(loan.portion())
                 .code(contract.getCode())
                 .status(contract.getStatus().getDescribe())
                 .modality(contract.getModality())
                 .dateCreation(contract.getDateCreation())
-                .portion(contract.getPortion())
                 .fees(BigDecimal.ZERO)
                 .rate(BigDecimal.ZERO)
                 .dateExpiration(contract.getExpirationDate().toString())
@@ -41,16 +44,18 @@ public class ContractDataConverter {
         var deadLine = new Deadline(LocalDate.parse(data.getDueDate()));
         var customer = new Customer(data.getDocument(), data.getScore(), data.getBirthDate());
         var risk = new Risk(BigDecimal.ZERO, BigDecimal.ZERO);
+        var loan = new Loan(data.getPortion(), data.getInstallmentValue(), data.getLoan(), data.getTotalLoan());
 
         return Contract.builder()
                 .code(data.getCode())
-                .status(StatusContract.valueOf(data.getStatus()))
+                .status(StatusContract.toEnum(data.getStatus()))
                 .dateCreation(data.getDateCreation())
                 .customer(customer)
                 .financial(financial)
                 .expirationDate(LocalDate.parse(data.getDateExpiration()))
                 .risk(risk)
                 .deadline(deadLine)
+                .loan(loan)
                 .build();
     }
 }
