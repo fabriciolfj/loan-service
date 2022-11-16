@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class ContractCommissionDTO {
 
+    private String partner;
     private Integer portion;
     private BigDecimal loan;
     private BigDecimal installment;

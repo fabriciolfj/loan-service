@@ -37,4 +37,6 @@ public class CustomerRequest {
     @JsonProperty("modality")
     @NotEmpty(message = "Modalidade ausente")
     private String modality;
+    @NotEmpty(message = "Partner nao informado")
+    private String partner;
 }

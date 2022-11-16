@@ -16,6 +16,7 @@ import java.util.UUID;
 public class Contract {
 
     private String code;
+    private String partner;
     private StatusContract status;
     private LocalDate expirationDate;
     private LocalDateTime dateCreation;
@@ -42,11 +43,12 @@ public class Contract {
         return this;
     }
 
-    public Contract init(final Customer customer, final Financial financial) {
+    public Contract init(final Customer customer, final Financial financial, final String partner) {
         this.customer = customer;
         this.financial = financial;
         this.status = StatusContract.PENDING;
         this.expirationDate = LocalDate.now();
+        this.partner = partner;
         return this;
     }
 

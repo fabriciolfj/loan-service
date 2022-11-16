@@ -12,6 +12,7 @@ public class ContractCommissionDTOConverter {
                 .installment(contract.getInstallment())
                 .loan(contract.getLoanValue())
                 .portion(contract.getPortion())
+                .partner(contract.getPartner())
                 .build();
     }
 }

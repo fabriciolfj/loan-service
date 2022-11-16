@@ -22,6 +22,7 @@ public class ContractDataConverter {
 
         var contractData= ContractData.builder()
                 .loan(loan.loan())
+                .partner(contract.getPartner())
                 .installmentValue(loan.installment())
                 .totalLoan(loan.totalLoan())
                 .portion(loan.portion())

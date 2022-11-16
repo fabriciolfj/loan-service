@@ -38,6 +38,8 @@ public class ContractData extends PanacheEntity {
     private BigDecimal installmentValue;
     @Column(name = "total_loan", nullable = false, precision = 4)
     private BigDecimal totalLoan;
+    @Column(name = "partner")
+    private String partner;
 
     public Integer getScore() {
         return this.customer.getScore();
