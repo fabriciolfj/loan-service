@@ -2,7 +2,7 @@ package com.github.fabriciolfj.busines.usecase;
 
 import com.github.fabriciolfj.busines.ProviderEventContract;
 import com.github.fabriciolfj.busines.ProviderFindContract;
-import com.github.fabriciolfj.busines.ProviderSaveContract;
+import com.github.fabriciolfj.busines.ProviderUpdateContract;
 import com.github.fabriciolfj.entities.Contract;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import javax.enterprise.context.ApplicationScoped;
 public class ApproveContractUseCase {
 
     private final ProviderFindContract findContract;
-    private final ProviderSaveContract saveContract;
+    private final ProviderUpdateContract updateContract;
     private final ProviderEventContract eventContract;
 
     public Uni<Void> execute(final String code) {
@@ -23,7 +23,7 @@ public class ApproveContractUseCase {
                 .onItem()
                 .transform(Contract::approve)
                 .onItem()
-                .transformToUni(saveContract::process)
+                .transformToUni(updateContract::processUpdateStatus)
                 .onItem()
                 .transformToUni(c -> eventContract.process(c));
     }

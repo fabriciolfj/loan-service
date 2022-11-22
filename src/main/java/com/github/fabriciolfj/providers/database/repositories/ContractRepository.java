@@ -3,6 +3,7 @@ package com.github.fabriciolfj.providers.database.repositories;
 import com.github.fabriciolfj.busines.ProviderFindContract;
 import com.github.fabriciolfj.busines.ProviderSaveContract;
 import com.github.fabriciolfj.busines.ProviderListContract;
+import com.github.fabriciolfj.busines.ProviderUpdateContract;
 import com.github.fabriciolfj.entities.Contract;
 import com.github.fabriciolfj.exceptions.ContractNotFoundException;
 import com.github.fabriciolfj.providers.database.converter.ContractDataConverter;
@@ -15,7 +16,7 @@ import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 @Slf4j
-public class ContractRepository implements ProviderFindContract, ProviderSaveContract, ProviderListContract {
+public class ContractRepository implements ProviderFindContract, ProviderSaveContract, ProviderListContract, ProviderUpdateContract {
 
     private static final int PAGE_SIZE = 3;
 
@@ -36,6 +37,19 @@ public class ContractRepository implements ProviderFindContract, ProviderSaveCon
                 })
                 .onItem()
                 .transform(ContractDataConverter::toEntity);
+    }
+
+    @Override
+    public Uni<Contract> processUpdateStatus(final Contract contract) {
+        return Uni.createFrom().item(contract).onItem()
+                .transformToUni(c -> Panache.withTransaction(() ->ContractData
+                        .update("status = ?1 where code = ?2", contract.getStatus().getDescribe(), contract.getCode())))
+                .onItem()
+                .invoke(c -> log.info("Contract updated: {}, rows {}",contract.getCode(), c))
+                .onItem()
+                .transform(result -> contract)
+                .onFailure()
+                .invoke(e -> log.error("Fail saved contract. Details {}", e.getMessage()));
     }
 
     @Override

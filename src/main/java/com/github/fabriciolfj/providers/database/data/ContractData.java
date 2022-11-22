@@ -31,7 +31,7 @@ public class ContractData extends PanacheEntity {
     private BigDecimal rate;
     private BigDecimal fees;
     private String status;
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH, CascadeType.MERGE})
     @JoinColumn(name = "customer_id")
     private CustomerData customer;
     @Column(name = "installment_value", nullable = false, precision = 4)

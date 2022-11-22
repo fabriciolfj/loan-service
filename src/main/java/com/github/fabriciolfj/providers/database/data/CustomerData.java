@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -23,6 +24,6 @@ public class CustomerData extends PanacheEntity {
     private String birthDate;
     private BigDecimal salary;
     private Integer score;
-    @OneToMany(orphanRemoval = true, mappedBy = "customer")
-    private List<ContractData> contracts;
+    @OneToMany(orphanRemoval = true, mappedBy = "customer", cascade = CascadeType.ALL)
+    private List<ContractData> contracts = new ArrayList<>();
 }

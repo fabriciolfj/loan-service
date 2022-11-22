@@ -11,6 +11,25 @@ public class ContractDataConverter {
 
     private ContractDataConverter() { }
 
+    public static ContractData toMergeData(final Contract contract, final ContractData data) {
+        var loan = contract.getLoan();
+
+        data.setStatus(contract.getStatus().getDescribe());
+        data.setPartner(contract.getPartner());
+        data.setInstallmentValue(loan.loan());
+        data.setTotalLoan(loan.totalLoan());
+        data.setPortion(loan.portion());
+        data.setCode(contract.getCode());
+        data.setModality(contract.getModality());
+        data.setDateCreation(contract.getDateCreation());
+        data.setFees(BigDecimal.ZERO);
+        data.setRate(BigDecimal.ZERO);
+        data.setDateExpiration(contract.getExpirationDate().toString());
+        data.setDueDate(contract.getDueDate().toString());
+
+        return data;
+    }
+
     public static ContractData toData(final Contract contract) {
         var loan = contract.getLoan();
         var customer = CustomerData.builder()
@@ -49,6 +68,7 @@ public class ContractDataConverter {
 
         return Contract.builder()
                 .code(data.getCode())
+                .partner(data.getPartner())
                 .status(StatusContract.toEnum(data.getStatus()))
                 .dateCreation(data.getDateCreation())
                 .customer(customer)
