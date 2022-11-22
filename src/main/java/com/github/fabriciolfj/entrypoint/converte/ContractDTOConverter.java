@@ -17,6 +17,6 @@ public class ContractDTOConverter {
         var financial = new Financial(request.getPortion(), request.getValue(), request.getSalary(), Modality.toEnum(request.getModality()));
 
         var contract = new Contract();
-        return contract.init(customer, financial);
+        return contract.init(customer, financial, request.getPartner());
     }
 }
