@@ -8,8 +8,6 @@ import javax.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class CalculateFinanceUseCase {
 
-    private static final Long DAY = 30L;
-
     public Uni<Contract> execute(final Contract contract) {
         return Uni.createFrom()
                 .item(contract)
