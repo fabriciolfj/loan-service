@@ -24,6 +24,7 @@ public class CustomerData extends PanacheEntity {
     private String birthDate;
     private BigDecimal salary;
     private Integer score;
-    @OneToMany(orphanRemoval = true, mappedBy = "customer", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ContractData> contracts = new ArrayList<>();
 }

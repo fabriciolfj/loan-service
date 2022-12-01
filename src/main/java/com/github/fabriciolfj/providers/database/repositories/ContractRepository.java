@@ -8,11 +8,13 @@ import com.github.fabriciolfj.entities.Contract;
 import com.github.fabriciolfj.exceptions.ContractNotFoundException;
 import com.github.fabriciolfj.providers.database.converter.ContractDataConverter;
 import com.github.fabriciolfj.providers.database.data.ContractData;
+import com.github.fabriciolfj.providers.database.data.CustomerData;
 import io.quarkus.hibernate.reactive.panache.Panache;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.extern.slf4j.Slf4j;
 import javax.enterprise.context.ApplicationScoped;
+import java.time.Duration;
 
 @ApplicationScoped
 @Slf4j
@@ -55,7 +57,9 @@ public class ContractRepository implements ProviderFindContract, ProviderSaveCon
     @Override
     public Uni<Contract> process(final Contract contract) {
         return Uni.createFrom().item(contract).onItem()
-                .transform(ContractDataConverter::toData)
+                .transformToUni(c -> findCustomer(c))
+                .onItem()
+                .transform(c -> ContractDataConverter.toData(contract, c))
                 .onItem()
                 .transformToUni(c -> Panache.withTransaction(() -> c.persist()))
                 .invoke(c -> log.info("Contract saved: {}", c))
@@ -74,5 +78,12 @@ public class ContractRepository implements ProviderFindContract, ProviderSaveCon
                 .transformToMulti(r -> Multi.createFrom().items(r.toArray()))
                 .onItem()
                 .transform(c -> ContractDataConverter.toEntity((ContractData) c));
+    }
+
+    private Uni<CustomerData> findCustomer(final Contract contract) {
+        return CustomerData.find("document", contract.getDocument())
+                .firstResult()
+                .flatMap(c -> Uni.createFrom().item((CustomerData) c))
+                .replaceIfNullWith(() -> ContractDataConverter.toDataCustomer(contract));
     }
 }

@@ -6,6 +6,7 @@ import com.github.fabriciolfj.providers.database.data.CustomerData;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 public class ContractDataConverter {
 
@@ -30,14 +31,17 @@ public class ContractDataConverter {
         return data;
     }
 
-    public static ContractData toData(final Contract contract) {
-        var loan = contract.getLoan();
-        var customer = CustomerData.builder()
+    public static CustomerData toDataCustomer(final Contract contract) {
+        return CustomerData.builder()
                 .salary(contract.getSalary())
                 .birthDate(contract.getBirthDate().toString())
                 .document(contract.getDocument())
                 .score(contract.getScore())
                 .build();
+    }
+
+    public static ContractData toData(final Contract contract, final CustomerData customerData) {
+        var loan = contract.getLoan();
 
         var contractData= ContractData.builder()
                 .loan(loan.loan())
@@ -53,8 +57,10 @@ public class ContractDataConverter {
                 .rate(BigDecimal.ZERO)
                 .dateExpiration(contract.getExpirationDate().toString())
                 .dueDate(contract.getDueDate().toString())
-                .customer(customer)
+                .customer(customerData)
                 .build();
+
+        customerData.setContracts(List.of(contractData));
 
         return contractData;
     }
