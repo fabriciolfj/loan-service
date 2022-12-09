@@ -21,7 +21,7 @@ public class ProducerEventCommission implements ProviderEventContract {
     @Inject
     @Channel("commission-service")
     @OnOverflow(value = OnOverflow.Strategy.BUFFER)
-    private MutinyEmitter<String> producer;
+    private MutinyEmitter<ContractCommissionDTO> producer;
 
     @Inject
     private ObjectMapper mapper;
@@ -31,8 +31,6 @@ public class ProducerEventCommission implements ProviderEventContract {
         return Uni.createFrom().item(contract)
                 .onItem()
                 .transform(ContractCommissionDTOConverter::toDTO)
-                .onItem()
-                .transform(this::toJson)
                 .onItem()
                 .transformToUni(producer::send)
                 .invoke(() -> log.info("Message send"));
