@@ -14,7 +14,6 @@ import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.extern.slf4j.Slf4j;
 import javax.enterprise.context.ApplicationScoped;
-import java.time.Duration;
 
 @ApplicationScoped
 @Slf4j
