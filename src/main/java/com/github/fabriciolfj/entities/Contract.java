@@ -26,10 +26,6 @@ public class Contract {
     private Loan loan;
     private Risk risk;
 
-    public Financial getFinancial() {
-        return financial;
-    }
-
     public Integer getYearsBirthDate() {
         return LocalDate.now().getYear() - customer.getYearsBirthDate();
     }

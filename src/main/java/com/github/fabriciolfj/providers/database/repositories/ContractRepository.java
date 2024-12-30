@@ -9,11 +9,13 @@ import com.github.fabriciolfj.exceptions.ContractNotFoundException;
 import com.github.fabriciolfj.providers.database.converter.ContractDataConverter;
 import com.github.fabriciolfj.providers.database.data.ContractData;
 import com.github.fabriciolfj.providers.database.data.CustomerData;
-import io.quarkus.hibernate.reactive.panache.Panache;
+import io.quarkus.hibernate.reactive.panache.PanacheQuery;
+import io.quarkus.hibernate.reactive.panache.common.WithSession;
+import io.quarkus.hibernate.reactive.panache.common.WithTransaction;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.extern.slf4j.Slf4j;
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 @Slf4j
@@ -22,12 +24,13 @@ public class ContractRepository implements ProviderFindContract, ProviderSaveCon
     private static final int PAGE_SIZE = 3;
 
     @Override
+    @WithSession
     public Uni<Contract> process(final String code) {
         return Uni.createFrom().item(code)
                 .onItem()
                 .transform(c -> ContractData.find("code", code))
                 .onItem()
-                .transformToUni(c -> c.firstResult())
+                .transformToUni(PanacheQuery::firstResult)
                 .onItem()
                 .transform(c -> {
                     if (c == null) {
@@ -41,26 +44,28 @@ public class ContractRepository implements ProviderFindContract, ProviderSaveCon
     }
 
     @Override
+    @WithTransaction
     public Uni<Contract> processUpdateStatus(final Contract contract) {
         return Uni.createFrom().item(contract).onItem()
-                .transformToUni(c -> Panache.withTransaction(() ->ContractData
-                        .update("status = ?1 where code = ?2", contract.getStatus().getDescribe(), contract.getCode())))
+                .transformToUni(c -> ContractData
+                        .update("status = ?1 where code = ?2", contract.getStatus().getDescribe(), contract.getCode()))
                 .onItem()
                 .invoke(c -> log.info("Contract updated: {}, rows {}",contract.getCode(), c))
                 .onItem()
                 .transform(result -> contract)
                 .onFailure()
-                .invoke(e -> log.error("Fail saved contract. Details {}", e.getMessage()));
+                .invoke(e -> log.error("Fail updated contract. Details {}", e.getMessage()));
     }
 
     @Override
+    @WithTransaction
     public Uni<Contract> process(final Contract contract) {
         return Uni.createFrom().item(contract).onItem()
-                .transformToUni(c -> findCustomer(c))
+                .transformToUni(this::findCustomer)
                 .onItem()
                 .transform(c -> ContractDataConverter.toData(contract, c))
                 .onItem()
-                .transformToUni(c -> Panache.withTransaction(() -> c.persist()))
+                .transformToUni(c -> c.persist())
                 .invoke(c -> log.info("Contract saved: {}", c))
                 .onItem()
                 .transform(result -> contract)

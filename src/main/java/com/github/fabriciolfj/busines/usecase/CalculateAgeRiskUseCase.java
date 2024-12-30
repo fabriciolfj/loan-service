@@ -6,12 +6,10 @@ import com.github.fabriciolfj.entities.Deadline;
 import io.smallrye.mutiny.Uni;
 import org.eclipse.microprofile.config.inject.ConfigProperties;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class CalculateAgeRiskUseCase {
-
-    private static final Integer MONTHS = 12;
 
     @ConfigProperties
     private LoanSupportProperties loanSupportProperties;
@@ -19,7 +17,7 @@ public class CalculateAgeRiskUseCase {
     public Uni<Contract> execute(final Contract contract) {
         return Uni.createFrom().item(contract)
                 .onItem()
-                .transform(c -> c.getYearsBirthDate())
+                .transform(Contract::getYearsBirthDate)
                 .onItem()
                 .transformToUni(value -> {
                     if (value > loanSupportProperties.age) {

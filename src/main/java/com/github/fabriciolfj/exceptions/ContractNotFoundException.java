@@ -3,7 +3,7 @@ package com.github.fabriciolfj.exceptions;
 import com.github.fabriciolfj.exceptions.enums.Errors;
 import lombok.Getter;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 
 @Getter
 public class ContractNotFoundException extends RuntimeException {

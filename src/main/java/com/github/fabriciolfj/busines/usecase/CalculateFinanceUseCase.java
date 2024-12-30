@@ -3,7 +3,7 @@ package com.github.fabriciolfj.busines.usecase;
 import com.github.fabriciolfj.entities.Contract;
 import com.github.fabriciolfj.exceptions.LoanInvalidException;
 import io.smallrye.mutiny.Uni;
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class CalculateFinanceUseCase {

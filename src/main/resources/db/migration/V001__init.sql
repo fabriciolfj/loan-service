@@ -27,4 +27,18 @@ create table contract(
   constraint fk_customer_constract foreign key (customer_id) references customer(id)
 );
 
-create sequence hibernate_sequence
+
+CREATE SEQUENCE IF NOT EXISTS customer_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+
+CREATE SEQUENCE IF NOT EXISTS contract_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;

@@ -1,7 +1,7 @@
 version: "3.3"
 services:
   postgres_loan:
-    image: debezium/example-postgres
+    image: postgres:latest
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
@@ -9,7 +9,7 @@ services:
       - "5432:5432"
 
   postgres_commission:
-    image: debezium/example-postgres
+    image: postgres:latest
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root

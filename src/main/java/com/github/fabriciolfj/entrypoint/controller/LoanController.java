@@ -11,12 +11,11 @@ import com.github.fabriciolfj.entrypoint.dto.request.CustomerRequest;
 import com.github.fabriciolfj.entrypoint.dto.response.FinancialResponse;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
+import jakarta.validation.Valid;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import javax.validation.Valid;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Response;
 import java.time.Duration;
 
 @Slf4j
@@ -80,7 +79,7 @@ public class LoanController {
                 .onItem()
                 .transformToUni(loanSuggestionUseCase::execute)
                 .onItem()
-                .transform(c -> FinancialDTOConverter.toResponse(c))
+                .transform(FinancialDTOConverter::toResponse)
                 .onItem()
                 .transform(c -> Response.status(Response.Status.CREATED).entity(c).build())
                 .onFailure()

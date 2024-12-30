@@ -7,7 +7,7 @@ import com.github.fabriciolfj.entities.Contract;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 @RequiredArgsConstructor
