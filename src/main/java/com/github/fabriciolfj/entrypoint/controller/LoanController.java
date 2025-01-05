@@ -31,7 +31,7 @@ public class LoanController {
     @GET
     public Multi<FinancialResponse> findAll(@QueryParam("page_init") final int pageInit) {
         return listAllContractsUseCase.execute(pageInit)
-                .map(r -> FinancialDTOConverter.toResponse(r))
+                .map(FinancialDTOConverter::toResponse)
                 .ifNoItem()
                 .after(Duration.ofSeconds(5))
                 .recoverWithMulti(() -> Multi.createFrom().empty())
