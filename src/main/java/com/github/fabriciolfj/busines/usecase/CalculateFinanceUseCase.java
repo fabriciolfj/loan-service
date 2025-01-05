@@ -19,6 +19,6 @@ public class CalculateFinanceUseCase {
 
                     throw new LoanInvalidException();
                 }).onItem()
-                .transform(c -> c.createLoan());
+                .transform(Contract::createLoan);
     }
 }
